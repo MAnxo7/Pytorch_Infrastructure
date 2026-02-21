@@ -23,7 +23,7 @@ def fit(model, device, train_loader, val_loader, optimizer, loss_fn, epochs, sch
         writer = csv.writer(f, delimiter=",")
         writer.writerow(["epoch","split","loss","acc","lr","duration_s"])
     while(act_epoch < epochs and last_improve < vpatience):
-        print(act_epoch)
+        print("epoch nº",act_epoch)
         #TRAIN
         t0 = time.time()
         train_metrics = train_one_epoch(model,train_loader,optimizer,loss_fn,device)
@@ -92,7 +92,7 @@ def train_one_epoch(model, loader, optimizer, loss_fn, device):
         #Metrics
         samples = xn.size(0)
         train_loss += loss.item()*samples
-        train_acc += utils.accuracy_from_logits(logits, yn)*samples
+        train_acc += utils.binary_accuracy_from_logits(logits, yn)*samples
         n_samples+=samples
     return {"train_loss":train_loss/n_samples,"train_acc":train_acc/n_samples}
         
@@ -108,6 +108,6 @@ def evaluate(model,loader, loss_fn, device):
             #Metrics
             samples = xn.size(0)
             eval_loss += loss.item()*samples
-            eval_acc += utils.accuracy_from_logits(logits, yn)*samples
+            eval_acc += utils.binary_accuracy_from_logits(logits, yn)*samples
             n_samples+=samples
     return {"eval_loss":eval_loss/n_samples,"eval_acc":eval_acc/n_samples}
